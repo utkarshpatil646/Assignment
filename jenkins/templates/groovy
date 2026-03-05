@@ -1,0 +1,23 @@
+podTemplate(
+    label: 'dynamic-psql',
+    containers: [
+        containerTemplate(
+            name: 'psql-client',
+            image: 'postgres:15',
+            ttyEnabled: true,
+            command: 'cat'
+        )
+    ]
+) {
+    node('dynamic-psql') {
+        container('psql-client') {
+            sh '''
+                export PGPASSWORD=apppassword
+                psql -h postgress-custom-postgres \
+                     -U appuser \
+                     -d appdb \
+                     -c "INSERT INTO execution_log (execution_time) VALUES (NOW());"
+            '''
+        }
+    }
+}

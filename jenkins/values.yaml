@@ -1,0 +1,79 @@
+controller:
+  replicaCount: 1
+
+  image:
+    repository: jenkins/jenkins
+    tag: lts-jdk17
+    pullPolicy: IfNotPresent
+
+  serviceType: NodePort
+  nodePort: 30081
+  servicePort: 8080
+
+  admin:
+    createSecret: true
+    username: admin
+    password: StrongAdminPass123
+
+  installPlugins:
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - configuration-as-code
+    - blueocean
+    - credentials-binding
+    - pipeline-stage-view
+    - prometheus
+
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+
+  javaOpts: "-Xms512m -Xmx1024m"
+
+  persistence:
+    enabled: true
+    storageClass: standard
+    accessMode: ReadWriteOnce
+    size: 5Gi
+
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 1000
+
+  JCasC:
+    configScripts:
+      security-config: |
+        jenkins:
+          securityRealm:
+            local:
+              allowsSignup: false
+          authorizationStrategy:
+            loggedInUsersCanDoAnything:
+              allowAnonymousRead: false
+
+      kubernetes-config: |
+        jenkins:
+          clouds:
+            - kubernetes:
+                name: "kubernetes"
+                namespace: "default"
+                jenkinsUrl: "http://jenkins.default.svc.cluster.local:8080"
+                jenkinsTunnel: "jenkins.default.svc.cluster.local:50000"
+                containerCapStr: "5"
+                templates:
+                  - name: "k8s-agent"
+                    label: "k8s-agent"
+                    serviceAccount: "jenkins"
+                    containers:
+                      - name: "jnlp"
+                        image: "jenkins/inbound-agent:latest"
+                        workingDir: "/home/jenkins/agent"
+                        ttyEnabled: true
+
+agent:
+  enabled: false
