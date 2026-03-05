@@ -1,23 +1,46 @@
-podTemplate(
-    label: 'dynamic-psql',
-    containers: [
-        containerTemplate(
-            name: 'psql-client',
-            image: 'postgres:15',
-            ttyEnabled: true,
-            command: 'cat'
-        )
-    ]
-) {
-    node('dynamic-psql') {
-        container('psql-client') {
-            sh '''
+pipelineJob('postgres-pipeline') {
+
+    triggers {
+        cron('H/2 * * * *')
+    }
+
+    definition {
+        cps {
+            script("""
+pipeline {
+    agent {
+        kubernetes {
+            defaultContainer 'psql-client'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: psql-client
+    image: postgres:15
+    command:
+    - cat
+    tty: true
+'''
+        }
+    }
+
+    stages {
+        stage('Check Postgres') {
+            steps {
+                sh '''
                 export PGPASSWORD=apppassword
                 psql -h postgress-custom-postgres \
                      -U appuser \
                      -d appdb \
                      -c "INSERT INTO execution_log (execution_time) VALUES (NOW());"
-            '''
+                '''
+            }
+        }
+    }
+}
+""")
+            sandbox()
         }
     }
 }
