@@ -22,7 +22,7 @@ spec:
             - secretRef:
                 name: {{ include "custom-postgres.fullname" . }}-secret
             - configMapRef:
-                name: postgres-config
+                name: postgres-init-script
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
