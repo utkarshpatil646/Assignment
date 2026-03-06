@@ -6,7 +6,6 @@ sudo mkdir -p /mnt/data/jenkins
 sudo chown -R 1000:1000 /mnt/data/jenkins
 sudo chmod -R 775 /mnt/data/jenkins
 EOD
-cd Assignment
 
 kubectl apply -f ./jenkins/templates/pv.yaml
 kubectl apply -f ./jenkins/templates/pvc.yaml
@@ -24,3 +23,5 @@ kubectl create secret generic postgres-exporter-secret \
   --from-literal=DATA_SOURCE_NAME="postgresql://appuser:apppassword@postgress-custom-postgres:5432/appdb?sslmode=disable"
 
 kubectl get secret monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+
+helm install postgress ./postgress/.
