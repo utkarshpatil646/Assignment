@@ -1,5 +1,6 @@
 controller:
   replicaCount: 1
+  numExecutors: 2          # moved here from JCasC
 
   image:
     repository: jenkins/jenkins
@@ -24,8 +25,8 @@ controller:
     - credentials-binding
     - pipeline-stage-view
     - prometheus
-    - job dsl
-    
+    - job-dsl              # fixed: was "job dsl" (space → hyphen)
+
   resources:
     requests:
       cpu: "500m"
@@ -56,10 +57,8 @@ controller:
           authorizationStrategy:
             loggedInUsersCanDoAnything:
               allowAnonymousRead: false
-
       kubernetes-config: |
         jenkins:
-          numExecutors: 2
           clouds:
             - kubernetes:
                 name: "kubernetes"
