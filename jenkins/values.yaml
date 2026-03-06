@@ -24,9 +24,8 @@ controller:
     - credentials-binding
     - pipeline-stage-view
     - prometheus
-    - Job DSL
-    - XML Job to Job DSL
-
+    - job dsl
+    
   resources:
     requests:
       cpu: "500m"
