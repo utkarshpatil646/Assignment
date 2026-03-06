@@ -60,6 +60,7 @@ controller:
 
       kubernetes-config: |
         jenkins:
+          numExecutors: 2
           clouds:
             - kubernetes:
                 name: "kubernetes"
