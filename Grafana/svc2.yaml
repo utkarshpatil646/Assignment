@@ -8,6 +8,7 @@ spec:
   ports:
   - port: 9187
     targetPort: 9187
-  type: ClusterIP
+    nodePort: 30083
+  type: NodePort
   selector:
     app: postgres-exporter
