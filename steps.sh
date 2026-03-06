@@ -13,15 +13,13 @@ helm install jenkins jenkins/jenkins -f ./jenkins/values.yaml
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm install monitoring prometheus-community/kube-prometheus-stack
+helm install monitoring prometheus-community/kube-prometheus-stac
+
+kubectl create secret generic postgres-exporter-secret --from-literal=DATA_SOURCE_NAME="postgresql://appuser:apppassword@postgress-custom-postgres:5432/appdb?sslmode=disable"
+kubectl get secret monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
 
 kubectl apply -f ./Grafana/exporter.yaml
 kubectl apply -f ./Grafana/monitor.yaml
 kubectl apply -f ./Grafana/svc.yaml
-
-kubectl create secret generic postgres-exporter-secret \
-  --from-literal=DATA_SOURCE_NAME="postgresql://appuser:apppassword@postgress-custom-postgres:5432/appdb?sslmode=disable"
-
-kubectl get secret monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
 
 helm install postgress ./postgress/.
