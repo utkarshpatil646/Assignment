@@ -20,7 +20,7 @@ echo "Waiting for monitoring stack to be ready..."
 kubectl wait --for=condition=ready pod \
   -l app.kubernetes.io/name=grafana \
   -n default \
-  --timeout=120s
+  --timeout=10s
 
 kubectl apply -f ./Grafana/exporter.yaml
 kubectl apply -f ./Grafana/monitor.yaml
