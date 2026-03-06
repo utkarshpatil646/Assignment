@@ -12,19 +12,13 @@ kubectl apply -f ./jenkins/templates/pvc.yaml
 helm install jenkins jenkins/jenkins -f ./jenkins/values.yaml
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
 helm install monitoring prometheus-community/kube-prometheus-stack  # fix: was "kube-prometheus-stac"
-
-# Wait for Prometheus stack CRDs and resources to be ready before proceeding
-echo "Waiting for monitoring stack to be ready..."
-kubectl wait --for=condition=ready pod \
-  -l app.kubernetes.io/name=grafana \
-  -n default \
-  --timeout=10s
 
 kubectl apply -f ./Grafana/exporter.yaml
 kubectl apply -f ./Grafana/monitor.yaml
 kubectl apply -f ./Grafana/svc.yaml
+kubectl apply -f ./Grafana/svc2.yaml
+helm repo update
 
 kubectl create secret generic postgres-exporter-secret \
   --from-literal=DATA_SOURCE_NAME="postgresql://appuser:apppassword@postgress-custom-postgres:5432/appdb?sslmode=disable"
