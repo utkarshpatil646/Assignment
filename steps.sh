@@ -7,17 +7,17 @@ sudo chown -R 1000:1000 /mnt/data/jenkins
 sudo chmod -R 775 /mnt/data/jenkins
 EOD
 
-kubectl apply -f Assignment/jenkins/templates/pv.yaml
-kubectl apply -f Assignment/jenkins/templates/pvc.yaml
-helm install jenkins jenkins/jenkins -f Assignment/jenkins/values.yaml
+kubectl apply -f ./jenkins/templates/pv.yaml
+kubectl apply -f ./jenkins/templates/pvc.yaml
+helm install jenkins jenkins/jenkins -f ./jenkins/values.yaml
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm install monitoring prometheus-community/kube-prometheus-stack
 
-kubectl apply -f Assignment/Grafana/exporter.yaml
-kubectl apply -f Assignment/Grafana/monitor.yaml
-kubectl apply -f Assignment/Grafana/svc.yaml
+kubectl apply -f ./Grafana/exporter.yaml
+kubectl apply -f ./Grafana/monitor.yaml
+kubectl apply -f ./Grafana/svc.yaml
 
 kubectl create secret generic postgres-exporter-secret \
   --from-literal=DATA_SOURCE_NAME="postgresql://appuser:apppassword@postgress-custom-postgres:5432/appdb?sslmode=disable"
