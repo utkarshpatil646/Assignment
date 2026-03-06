@@ -24,6 +24,8 @@ controller:
     - credentials-binding
     - pipeline-stage-view
     - prometheus
+    - Job DSL
+    - XML Job to Job DSL
 
   resources:
     requests:
