@@ -6,6 +6,7 @@ sudo mkdir -p /mnt/data/jenkins
 sudo chown -R 1000:1000 /mnt/data/jenkins
 sudo chmod -R 775 /mnt/data/jenkins
 EOD
+cd Assignment
 
 kubectl apply -f ./jenkins/templates/pv.yaml
 kubectl apply -f ./jenkins/templates/pvc.yaml
