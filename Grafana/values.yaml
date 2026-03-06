@@ -1,0 +1,9 @@
+grafana:
+  livenessProbe:
+    initialDelaySeconds: 300   # give 5min before first check
+    failureThreshold: 20
+    timeoutSeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    initialDelaySeconds: 120
+    failureThreshold: 10
